@@ -1,110 +1,284 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+
 <meta charset="UTF-8" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tarot</title><style>
+
+<title>Tarot</title>
+
+
+<style>
+
 html, body {
+
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+
   background: #ffffff;
+
   font-family: Arial, sans-serif;
+
   color: #222;
+
 }
+
 
 .page {
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   height: 100%;
+
 }
+
+
 
 .header {
+
   padding: 8px 0;
+
   font-size: 20px;
+
   font-weight: bold;
+
   letter-spacing: 2px;
+
 }
 
+
+
 /* PDF viewer */
+
 #viewer {
-  flex: 0 0 auto;
+
   display: flex;
+
   justify-content: center;
+
   align-items: center;
+
   width: 100%;
+
 }
 
 /* PDF canvas */
+
 #pdfCanvas {
+
   display: block;
+
   max-width: 90vw;
+
   max-height: 75vh;
+
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+box-shadow: none;
+
+  cursor: grab;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+  touch-action: none;
+
 }
+
+
+#pdfCanvas:active {
+
+  cursor: grabbing;
+
+}
+
+
 
 /* Buttons */
+
 .controls {
+
   display: flex;
+
   flex-wrap: nowrap;
+
   justify-content: center;
+
   align-items: center;
+
   gap: 6px;
+
   width: 100%;
+
   overflow-x: auto;
+
   padding: 10px 0;
+
   margin-top: 15px;
+
 }
+
+
 
 button {
+
   flex: 0 0 auto;
+
   padding: 6px 8px;
+
   font-size: 12px;
+
   border-radius: 6px;
+
   border: 1px solid #ccc;
+
   background: #f2f2f2;
+
   color: #222;
+
   white-space: nowrap;
+
   cursor: pointer;
 
+
   -webkit-tap-highlight-color: transparent;
+
   -webkit-appearance: none;
+
   appearance: none;
+
 }
+
+
 
 button:hover,
 button:focus,
 button:active {
+
   background: #f2f2f2;
+
   color: #222;
+
   outline: none;
+
   box-shadow: none;
+
 }
+
+
 
 .footer {
+
   padding: 5px;
+
   font-size: 13px;
+
 }
 
+
+
 .footer a {
+
   color: #0077cc;
+
   text-decoration: none;
+
 }
-</style></head><body><div class="page">  <div class="header">
-    TAROT
-  </div>  <div id="viewer">
-    <canvas id="pdfCanvas"></canvas>
-  </div>  <div class="controls">
-    <button onclick="previousCard()">Prev</button>
-    <button onclick="showMeaning()">Show</button>
-    <button onclick="nextCard()">Next</button>
-    <button id="flagButton" onclick="flagCard()">Flag</button>
-    <button id="allButton" onclick="flagAllCards()">All</button>
-    <button onclick="newReading()">Rand</button>
-  </div>  <div class="footer">
-    Support us at:
-    <a href="https://www.picklocks.com">www.picklocks.com</a>
-  </div></div><script type="module" src="app.js"></script></body>
+
+
+.card-frame {
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 25px 10px;
+
+  border-radius: 15px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+
+  width: fit-content;
+
+  max-width: 90vw;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+<div class="header">
+
+TAROT
+
+</div>
+
+
+<div id="viewer">
+    <div class="card-frame">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+</div>
+
+
+<div class="controls">
+
+<button onclick="previousCard()">Prev</button>
+
+<button onclick="showMeaning()">Show</button>
+
+<button onclick="nextCard()">Next</button>
+
+<button id="flagButton" onclick="flagCard()">Flag</button>
+
+<button id="allButton" onclick="flagAllCards()">All</button>
+
+<button onclick="newReading()">Rand</button>
+
+</div>
+
+
+
+<div class="footer">
+
+Support us at:
+
+<a href="https://www.picklocks.com">
+
+www.picklocks.com
+
+</a>
+
+</div>
+
+
+
+</div>
+
+
+
+<script type="module" src="app.js"></script>
+
+
+</body>
+
 </html>
