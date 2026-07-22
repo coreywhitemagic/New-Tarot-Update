@@ -6,3 +6,8 @@ Learn to read tarot with a visual tool. Flag individual tarot cards and select t
 Live at:
 
 https://www.shellcrash.com/tarot
+
+Or on github:
+
+
+https://alt-magick.github.io/New-Tarot-Update/
