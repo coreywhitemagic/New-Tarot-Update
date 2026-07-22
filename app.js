@@ -14,8 +14,6 @@ let oddPages = [];
 
 let currentIndex = 0;
 
-let usedPages = [];
-
 let flaggedCards = [];
 
 let showingMeaning = false;
@@ -28,6 +26,12 @@ document.getElementById("pdfCanvas");
 
 const ctx =
 canvas.getContext("2d");
+
+
+
+// ========================
+// FLAGS
+// ========================
 
 function updateFlagButton() {
 
@@ -44,15 +48,17 @@ function updateFlagButton() {
 
     if (flaggedCards.includes(cardPage)) {
 
-        button.innerHTML = "ðŸš© Flag";
+        button.textContent = "ðŸš© Flag";
 
     } else {
 
-        button.innerHTML = "Flag";
+        button.textContent = "Flag";
 
     }
 
 }
+
+
 
 function flagCard() {
 
@@ -74,27 +80,35 @@ function flagCard() {
     }
 
 
+    flaggedUsed = [];
+
     updateFlagButton();
 
 }
+
+
 
 function flagAllCards() {
 
     if (flaggedCards.length === oddPages.length) {
 
-        // Unflag all cards
         flaggedCards = [];
 
     } else {
 
-        // Flag all cards
         flaggedCards = oddPages.slice();
 
     }
 
+
+    flaggedUsed = [];
+
     updateFlagButton();
 
 }
+
+
+
 // ========================
 // LOAD PDF
 // ========================
@@ -102,14 +116,14 @@ function flagAllCards() {
 async function loadPDF() {
 
 
-    pdf = await pdfjsLib
-        .getDocument("tarot.pdf")
-        .promise;
+    pdf =
+    await pdfjsLib
+    .getDocument("tarot.pdf")
+    .promise;
 
 
 
     oddPages = [];
-
 
 
     for (
@@ -128,11 +142,7 @@ async function loadPDF() {
 
 
 
-    // Always start with The Fool
-
     currentIndex = 0;
-
-    usedPages = [oddPages[0]];
 
     showingMeaning = false;
 
@@ -143,10 +153,8 @@ async function loadPDF() {
 
 
 
-
-
 // ========================
-// DISPLAY CURRENT CARD
+// DISPLAY CARD
 // ========================
 
 function displayCurrentPage() {
@@ -158,78 +166,93 @@ function displayCurrentPage() {
     if (showingMeaning) {
 
         pageNumber =
-            oddPages[currentIndex] + 1;
+        oddPages[currentIndex] + 1;
 
-    }
 
-    else {
+        if (pageNumber > pdf.numPages) {
+
+            pageNumber =
+            oddPages[currentIndex];
+
+        }
+
+    } else {
 
         pageNumber =
-            oddPages[currentIndex];
+        oddPages[currentIndex];
 
     }
 
 
     displayPage(pageNumber);
 
+
     updateFlagButton();
+
 }
-
-
 
 
 
 // ========================
 // DISPLAY PDF PAGE
-// FIT SCREEN
 // ========================
+
 async function displayPage(pageNumber) {
 
+
     const page =
-        await pdf.getPage(pageNumber);
+    await pdf.getPage(pageNumber);
+
 
 
     const original =
-        page.getViewport({
-            scale: 1
-        });
+    page.getViewport({
+        scale: 1
+    });
 
 
-    // Leave room for buttons
+
     const availableWidth =
-        window.innerWidth * 0.90;
+    window.innerWidth * 0.90;
+
 
 
     const availableHeight =
-        (window.innerHeight - 120) * 0.90;
+    (window.innerHeight - 120) * 0.90;
 
 
-    // Fit PDF inside available space
+
     const scale =
-        Math.min(
-            availableWidth / original.width,
-            availableHeight / original.height
-        );
+    Math.min(
+        availableWidth / original.width,
+        availableHeight / original.height
+    );
+
 
 
     const viewport =
-        page.getViewport({
-            scale: scale
-        });
+    page.getViewport({
+        scale: scale
+    });
+
 
 
     canvas.width =
-        viewport.width;
+    viewport.width;
+
 
     canvas.height =
-        viewport.height;
+    viewport.height;
+
 
 
     canvas.style.width =
-        viewport.width + "px";
+    viewport.width + "px";
+
 
     canvas.style.height =
-        viewport.height + "px";
+    viewport.height + "px";
+
 
 
     await page.render({
@@ -239,13 +262,13 @@ async function displayPage(pageNumber) {
         viewport: viewport
 
     }).promise;
+
 }
 
 
 
-
 // ========================
-// NEW READING
+// RANDOM FLAGGED CARD
 // ========================
 
 function newReading() {
@@ -260,7 +283,7 @@ function newReading() {
     }
 
 
-    // Reset cycle when all flagged cards have been used
+
     if (flaggedUsed.length >= flaggedCards.length) {
 
         flaggedUsed = [];
@@ -268,31 +291,31 @@ function newReading() {
     }
 
 
-    // Cards not yet used in this cycle
+
     let available =
-        flaggedCards.filter(
-            page =>
-            !flaggedUsed.includes(page)
-        );
+    flaggedCards.filter(
+        page =>
+        !flaggedUsed.includes(page)
+    );
 
 
-    // Pick random unused flagged card
+
     let page =
-        available[
-            Math.floor(
-                Math.random() *
-                available.length
-            )
-        ];
+    available[
+        Math.floor(
+            Math.random() *
+            available.length
+        )
+    ];
 
 
-    // Remember it was used
+
     flaggedUsed.push(page);
 
 
 
     currentIndex =
-        oddPages.indexOf(page);
+    oddPages.indexOf(page);
 
 
 
@@ -306,7 +329,7 @@ function newReading() {
 
 
 // ========================
-// NEXT
+// NEXT / PREVIOUS
 // ========================
 
 function nextCard() {
@@ -315,19 +338,14 @@ function nextCard() {
     showingMeaning = false;
 
 
-
     currentIndex++;
 
 
-
-    if (
-        currentIndex >= oddPages.length
-    ) {
+    if (currentIndex >= oddPages.length) {
 
         currentIndex = 0;
 
     }
-
 
 
     displayCurrentPage();
@@ -335,12 +353,6 @@ function nextCard() {
 }
 
 
-
-
-
-// ========================
-// PREVIOUS
-// ========================
 
 function previousCard() {
 
@@ -348,20 +360,15 @@ function previousCard() {
     showingMeaning = false;
 
 
-
     currentIndex--;
 
 
-
-    if (
-        currentIndex < 0
-    ) {
+    if (currentIndex < 0) {
 
         currentIndex =
-            oddPages.length - 1;
+        oddPages.length - 1;
 
     }
-
 
 
     displayCurrentPage();
@@ -370,18 +377,15 @@ function previousCard() {
 
 
 
-
-
 // ========================
-// SHOW MEANING TOGGLE
+// SHOW MEANING
 // ========================
 
 function showMeaning() {
 
 
     showingMeaning =
-        !showingMeaning;
-
+    !showingMeaning;
 
 
     displayCurrentPage();
@@ -390,38 +394,18 @@ function showMeaning() {
 
 
 
-
-
 // ========================
-// RESIZE
+// BUTTONS
 // ========================
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        displayCurrentPage();
-
-    }
-);
-
-
-
-
-
-// Make buttons work from HTML
 
 window.newReading =
 newReading;
 
-
 window.nextCard =
 nextCard;
 
-
 window.previousCard =
 previousCard;
-
 
 window.showMeaning =
 showMeaning;
@@ -432,88 +416,113 @@ flagCard;
 window.flagAllCards =
 flagAllCards;
 
+
+
 // ========================
-// MOBILE SWIPE CONTROLS
+// POINTER SWIPE
+// MOUSE + TOUCH
 // ========================
 
-let touchStartX = 0;
-let touchEndX = 0;
+let pointerStartX = 0;
+
+let pointerDown = false;
 
 
-canvas.addEventListener("touchstart", function(e) {
-
-    touchStartX =
-        e.changedTouches[0].screenX;
-
-}, false);
+canvas.addEventListener(
+"pointerdown",
+function(e) {
 
 
-
-canvas.addEventListener("touchend", function(e) {
-
-    touchEndX =
-        e.changedTouches[0].screenX;
+    pointerDown = true;
 
 
-    handleSwipe();
-
-}, false);
-
+    pointerStartX =
+    e.clientX;
 
 
-function handleSwipe() {
+    canvas.setPointerCapture(
+        e.pointerId
+    );
 
-    let swipeDistance =
-        touchEndX - touchStartX;
+});
 
 
-    // Swipe left = next card
-    if (swipeDistance < -50) {
+
+canvas.addEventListener(
+"pointerup",
+function(e) {
+
+
+    if (!pointerDown) return;
+
+
+    pointerDown = false;
+
+
+    let distance =
+    e.clientX - pointerStartX;
+
+
+
+    if (distance < -50) {
 
         nextCard();
 
     }
 
-
-    // Swipe right = previous card
-    if (swipeDistance > 50) {
+    else if (distance > 50) {
 
         previousCard();
 
     }
 
-}
-
-// ========================
-// TAP CARD TO TOGGLE MEANING
-// ========================
-
-let touchMoved = false;
-
-
-canvas.addEventListener("touchstart", function() {
-
-    touchMoved = false;
-
-});
-
-
-canvas.addEventListener("touchmove", function() {
-
-    touchMoved = true;
-
-});
-
-
-canvas.addEventListener("touchend", function() {
-
-    // Only count as a tap, not a swipe
-    if (!touchMoved) {
+    else {
 
         showMeaning();
 
     }
 
+
 });
+
+
+
+canvas.addEventListener(
+"pointercancel",
+function() {
+
+    pointerDown = false;
+
+});
+
+
+
+// ========================
+// RESIZE
+// ========================
+
+let resizeTimer;
+
+
+window.addEventListener(
+"resize",
+function() {
+
+
+    clearTimeout(resizeTimer);
+
+
+    resizeTimer =
+    setTimeout(
+        () => {
+            displayCurrentPage();
+        },
+        150
+    );
+
+
+});
+
+
 
 loadPDF();
