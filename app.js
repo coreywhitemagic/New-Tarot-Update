@@ -48,7 +48,7 @@ function updateFlagButton() {
 
     if (flaggedCards.includes(cardPage)) {
 
-        button.textContent = "ðŸš© Flag";
+        button.textContent = "🚩 Flag";
 
     } else {
 
